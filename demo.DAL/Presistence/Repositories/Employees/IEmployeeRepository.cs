@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using demo.DAL.Entities.Departments;
+using demo.DAL.Entities.Employeees;
 using demo.DAL.Presistence.Repositories._Generic;
 
-namespace demo.DAL.Presistence.Repositories.Departments
+namespace demo.DAL.Presistence.Repositories.Employees
 {
-    public interface IDepartmentRepository:IGenericRepository<Department>
+    internal interface IEmployeeRepository:IGenericRepository<Employee>
     {
-   
-
+       
     }
 }

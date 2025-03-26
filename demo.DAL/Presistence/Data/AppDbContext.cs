@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using demo.DAL.Entities.Departments;
+using demo.DAL.Entities.Employeees;
 using Microsoft.EntityFrameworkCore;
 
 namespace demo.DAL.Presistence.Data
@@ -27,5 +28,6 @@ namespace demo.DAL.Presistence.Data
         }
 
         public DbSet<Department> Departments { get; set; }
+        public DbSet<Employee> EmployeeS { get; set; }
     }
 }
