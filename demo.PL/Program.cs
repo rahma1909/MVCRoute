@@ -1,6 +1,8 @@
 using demo.BLL.Services.Departments;
+using demo.BLL.Services.Employees;
 using demo.DAL.Presistence.Data;
 using demo.DAL.Presistence.Repositories.Departments;
+using demo.DAL.Presistence.Repositories.Employees;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -36,6 +38,10 @@ namespace demo.PL
             //});
             builder.Services.AddScoped<IDepartmentRepository,DepartmentRepository>(); //allow dependancy injection for deprepo
             builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+
+
+            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>(); //allow dependancy injection for emporepo
+            builder.Services.AddScoped<IEmployeeService, EmployeeService>();//used in controller
 
             var app = builder.Build();
 

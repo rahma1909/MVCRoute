@@ -9,7 +9,7 @@ using demo.DAL.Presistence.Repositories._Generic;
 
 namespace demo.DAL.Presistence.Repositories.Employees
 {
-    internal interface IEmployeeRepository:IGenericRepository<Employee>
+    public interface IEmployeeRepository:IGenericRepository<Employee>
     {
        
     }
