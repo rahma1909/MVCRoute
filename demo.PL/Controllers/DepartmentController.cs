@@ -9,6 +9,7 @@ namespace demo.PL.Controllers
 {
     public class DepartmentController : Controller
     {
+        #region Services
         private readonly IDepartmentService _departmentService;
         private readonly ILogger<DepartmentController> _logger;
 
@@ -18,20 +19,24 @@ namespace demo.PL.Controllers
         //public IDepartmentService DepartmentService { get; } = null!;
 
         //========
-        public DepartmentController(IDepartmentService departmentService, ILogger<DepartmentController> logger,IWebHostEnvironment enviroment)
+        public DepartmentController(IDepartmentService departmentService, ILogger<DepartmentController> logger, IWebHostEnvironment enviroment)
         {
             _departmentService = departmentService;
             _logger = logger;
             _enviroment = enviroment;
         }
+        #endregion
 
+        #region Index
         [HttpGet]
         public IActionResult Index()
         {
             var departments = _departmentService.GetAllDepartments();
-            return View("Index",departments);
+            return View("Index", departments);
         }
+        #endregion
 
+        #region Create
         [HttpGet]
 
         public IActionResult Create()
@@ -64,7 +69,7 @@ namespace demo.PL.Controllers
                 //2.set massege
                 if (_enviroment.IsDevelopment())
                 {
-                    
+
                     message = ex.Message;
                     return View(departmentDto);
                 }
@@ -77,11 +82,14 @@ namespace demo.PL.Controllers
             }
         }
 
+        #endregion
+
+        #region Details
         [HttpGet]
         public IActionResult Details(int? id)
         {
             if (id == null)
-            
+
                 return BadRequest();
 
             var department = _departmentService.GetDepartmentById(id.Value);
@@ -92,6 +100,9 @@ namespace demo.PL.Controllers
         }
 
 
+        #endregion
+
+        #region Edit
         [HttpGet] //Get: /DEP/EDIT/ID
         public IActionResult Edit(int? id)
         {
@@ -103,28 +114,28 @@ namespace demo.PL.Controllers
                 return NotFound();//404
             return View(new DepartmentEditViewModel()
             {
-                Name=department.Name,
-                Code=department.Code,
-                Description=department.Description,
-                CreationDate=department.CreationDate,
+                Name = department.Name,
+                Code = department.Code,
+                Description = department.Description,
+                CreationDate = department.CreationDate,
             });
         }
 
 
         [HttpPost]
 
-        public IActionResult Edit([FromRoute]int id,DepartmentEditViewModel departmentViewModel)
+        public IActionResult Edit([FromRoute] int id, DepartmentEditViewModel departmentViewModel)
         {
             if (!ModelState.IsValid)
                 return View(departmentViewModel);
 
-          var  massege = string.Empty;
+            var massege = string.Empty;
 
             try
             {
                 var departmentToUpdate = new UpdatedDepartmentDto()
                 {
-                    Id=id,
+                    Id = id,
                     Code = departmentViewModel.Code,
                     Description = departmentViewModel.Description,
                     CreationDate = departmentViewModel.CreationDate,
@@ -148,15 +159,62 @@ namespace demo.PL.Controllers
 
 
                 massege = _enviroment.IsDevelopment() ? ex.Message : "an error has happend while updateing the department :(";
-              
+
 
             }
             ModelState.AddModelError(string.Empty, massege);
             return View(departmentViewModel);
         }
+        #endregion
 
 
-      
+        #region Delete
+        [HttpGet]
+
+        public IActionResult Delete(int? id)
+        {
+            if (id is null)
+                return BadRequest();
+            var department = _departmentService.GetDepartmentById(id.Value);
+
+            if (department is null)
+                return NotFound();
+            return View(department);
+        }
+
+
+        [HttpPost]
+
+        public IActionResult Delete(int id)
+        {
+            var massege = string.Empty;
+
+            try
+            {
+                var deleted = _departmentService.DeleteDepartment(id);
+
+                if (deleted)
+                    return RedirectToAction(nameof(Index));
+
+                massege = "an error happened during deleting";
+            }
+            catch (Exception ex)
+            {
+
+                //1.log for exception
+                _logger.LogError(ex, ex.Message);
+                //2.set massege
+
+
+                massege = _enviroment.IsDevelopment() ? ex.Message : "an error has happend while updateing the department :(";
+
+
+            }
+            //ModelState.AddModelError(string.Empty, massege);
+            return RedirectToAction(nameof(Index)); //will implement toaster 
+
+        } 
+        #endregion
 
     }
 }
