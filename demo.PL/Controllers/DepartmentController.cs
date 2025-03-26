@@ -1,5 +1,6 @@
 ﻿using demo.BLL.DTOs.Department;
 using demo.BLL.Services.Departments;
+using demo.PL.ViewModels.Departments;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using NuGet.Protocol.Plugins;
@@ -89,5 +90,73 @@ namespace demo.PL.Controllers
                 return NotFound();
             return View(department);
         }
+
+
+        [HttpGet] //Get: /DEP/EDIT/ID
+        public IActionResult Edit(int? id)
+        {
+            if (id is null)
+                return BadRequest();//400
+            var department = _departmentService.GetDepartmentById(id.Value);
+
+            if (department is null)
+                return NotFound();//404
+            return View(new DepartmentEditViewModel()
+            {
+                Name=department.Name,
+                Code=department.Code,
+                Description=department.Description,
+                CreationDate=department.CreationDate,
+            });
+        }
+
+
+        [HttpPost]
+
+        public IActionResult Edit([FromRoute]int id,DepartmentEditViewModel departmentViewModel)
+        {
+            if (!ModelState.IsValid)
+                return View(departmentViewModel);
+
+          var  massege = string.Empty;
+
+            try
+            {
+                var departmentToUpdate = new UpdatedDepartmentDto()
+                {
+                    Id=id,
+                    Code = departmentViewModel.Code,
+                    Description = departmentViewModel.Description,
+                    CreationDate = departmentViewModel.CreationDate,
+                    Name = departmentViewModel.Name,
+                };
+
+
+                var result = _departmentService.UpdatedDepatment(departmentToUpdate) > 0;
+
+
+                if (result)
+                    return RedirectToAction(nameof(Index));
+
+                massege = "an error has happend while updateing the department :(";
+            }
+            catch (Exception ex)
+            {
+                //1.log for exception
+                _logger.LogError(ex, ex.Message);
+                //2.set massege
+
+
+                massege = _enviroment.IsDevelopment() ? ex.Message : "an error has happend while updateing the department :(";
+              
+
+            }
+            ModelState.AddModelError(string.Empty, massege);
+            return View(departmentViewModel);
+        }
+
+
+      
+
     }
 }

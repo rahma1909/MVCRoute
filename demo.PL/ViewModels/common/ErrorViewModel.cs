@@ -1,4 +1,4 @@
-namespace demo.PL.Models
+namespace demo.PL.ViewModels.common
 {
     public class ErrorViewModel
     {
