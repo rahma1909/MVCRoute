@@ -11,13 +11,16 @@ namespace demo.BLL.Services.Employees
 {
     public class EmployeeService : IEmployeeService
     {
-        private readonly EmployeeRepository _emprepo;
+       
+        
+            private readonly IEmployeeRepository _emprepo;
 
-        public EmployeeService(EmployeeRepository emprepo)
-        {
-           
+            public EmployeeService(IEmployeeRepository emprepo)  
+            {
             _emprepo = emprepo;
-        }
+            }
+       
+
         public int CreateEmployee(CreatedEmployeeDto EmployeeDto)
         {
             

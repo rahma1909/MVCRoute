@@ -28,6 +28,6 @@ namespace demo.DAL.Presistence.Data
         }
 
         public DbSet<Department> Departments { get; set; }
-        public DbSet<Employee> EmployeeS { get; set; }
+        public DbSet<Employee> Employees { get; set; }
     }
 }

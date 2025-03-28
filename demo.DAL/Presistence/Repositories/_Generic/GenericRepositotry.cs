@@ -65,4 +65,3 @@ namespace demo.DAL.Presistence.Repositories._Generic
         }
     }
 }
-}

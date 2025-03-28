@@ -40,8 +40,9 @@ namespace demo.PL
             builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 
 
-            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>(); //allow dependancy injection for emporepo
-            builder.Services.AddScoped<IEmployeeService, EmployeeService>();//used in controller
+            builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>(); // Ensure all dependencies are registered
+
 
             var app = builder.Build();
 

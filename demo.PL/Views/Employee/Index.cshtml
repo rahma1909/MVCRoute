@@ -1,0 +1,104 @@
+﻿@using demo.BLL.DTOs.Employee
+
+@model IEnumerable<EmployeeDto>
+
+@{
+    ViewData["Title"] = "Departments";
+
+}
+
+<h1>Employees</h1>
+
+
+<br/>
+<br/>
+
+<a asp-controller="Employee" asp-action="Create" class="btn btn-primary">Create New employee</a>
+<br />
+
+@if(Model.Count()>0){
+    <table class="table table-striped table-hover mt-4">
+        <thead class="text-center">
+            <tr>
+                <th @Html.DisplayNameFor(e => e.Name)>name</th>
+                <th @Html.DisplayNameFor(e => e.Age)>age</th>
+             
+             
+                <th @Html.DisplayNameFor(e => e.Salary)>salary</th>
+                <th @Html.DisplayNameFor(e => e.EmployeeType)>EmployeeType</th>
+                <th @Html.DisplayNameFor(e => e.Email)>Email</th>
+                <th @Html.DisplayNameFor(e => e.IsActive)>IsActive</th>
+                <th @Html.DisplayNameFor(e => e.Gendar)>Gendar</th>
+           
+                <th>Details</th>
+                <th>Update</th>
+                <th>Delete</th>
+            </tr>
+          
+        </thead>
+
+        <tbody class="text-center">
+            @foreach(var employee in Model){
+                <tr>
+                    <td>@Html.DisplayFor(e=>  employee.Name)</td>
+                    <td>@Html.DisplayFor(e=>employee.Age)</td>
+                    <td>@Html.DisplayFor(e => employee.Salary)</td>
+                    <td>@Html.DisplayFor(e => employee.EmployeeType)</td>
+                    <td>@Html.DisplayFor(e => employee.Email)</td>
+                    <td>@Html.DisplayFor(e => employee.IsActive)</td>
+                    <td>@Html.DisplayFor(e => employee.Gendar)</td>
+                    <td>
+                        <a asp-controller="Employee" asp-action="Details" asp-route-id="@employee.Id" class="btn btn-warning">
+                       <i class="fas fa-eye"></i>     Details
+                        </a>
+                    </td>
+
+                    <td>
+                        <a asp-controller="Employee" asp-action="Edit" asp-route-id="@employee.Id" class="btn btn-success">
+                            <i class="fas fa-edit"></i>     Update
+                        </a>
+                    </td>
+
+                    <td>
+                        @* <a asp-controller="Department" asp-action="Delete" asp-route-id="@department.Id" class="btn btn-danger"> *@
+                        @*     <i class="fas fa-trash"></i>     Details *@
+                        @* </a> *@
+
+
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </td>
+                </tr>
+
+
+                <!-- Modal -->
+                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="staticBackdropLabel">Delete Employee</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Are yoy sure for delete?
+                            </div>
+                            <div class="modal-footer">
+                               <form asp-action="Delete" asp-route-id="@employee.Id" method="post">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancle</button>
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                               </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </tbody>
+
+    </table>
+}else{
+    <div class="alert alert-info mt-3">
+        <h3>There is no Employees</h3>
+    </div>
+}
+
