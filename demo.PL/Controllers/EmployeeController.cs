@@ -107,29 +107,31 @@ namespace demo.PL.Controllers
 
         #region Edit
         [HttpGet] //Get: /DEP/EDIT/ID
-        public IActionResult Edit(int? id)
+        public IActionResult Edit(int id)
         {
-            if (id is null)
-                return BadRequest();//400
-            var employee = _employeeService.GetEmployeeById(id.Value);
+            var employee = _employeeService.GetEmployeeById(id);
 
-            if (employee is null)
-                return NotFound();//404
-            return View(new UpdatedEmployeeDto()
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            var employeeDto = new UpdatedEmployeeDto
             {
                 Name = employee.Name,
                 Email = employee.Email,
                 Address = employee.Address,
-                Age=employee.Age,
-                Salary=employee.Salary,
-                IsActive=employee.IsActive,
-                Phone=employee.Phone,
-                EmployeeType=employee.EmployeeType,
-                Gendar=employee.Gendar,
-                HiringDate=employee.HiringDate,
+                Salary = employee.Salary,
+                Phone = employee.Phone,
+                EmployeeType = employee.EmployeeType,
+                Gendar = employee.Gendar,
+                HiringDate = employee.HiringDate,
+                IsActive = employee.IsActive
+            };
 
-            });
+            return View(employeeDto);
         }
+
 
 
         [HttpPost]
@@ -143,8 +145,7 @@ namespace demo.PL.Controllers
 
             try
             {
-         
-
+               
 
                 var result = _employeeService.UpdatedEmployee(updatedEmployeeDto) > 0;
 
