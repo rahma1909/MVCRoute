@@ -62,7 +62,7 @@ namespace demo.BLL.Services.Employees
 
         public IEnumerable<EmployeeDto> GetAllEmployees()
         {
-            var employees = _emprepo.GetAllQuerable().Select(e => new EmployeeDto()
+            var employees = _emprepo.GetAllQuerable().Where(e=>!e.IsDeleted).Select(e => new EmployeeDto()
             {
                 Name=e.Name,
                 Age=e.Age,

@@ -25,11 +25,6 @@ namespace demo.DAL.Presistence.Repositories._Generic
             return _dbContext.SaveChanges();
         }
 
-        public int Delete(T entity)
-        {
-            _dbContext.Set<T>().Remove(entity);
-            return _dbContext.SaveChanges();
-        }
 
         public T? Get(int Id)
         {
@@ -60,6 +55,14 @@ namespace demo.DAL.Presistence.Repositories._Generic
 
         public int Update(T entity)
         {
+            _dbContext.Set<T>().Update(entity);
+            return _dbContext.SaveChanges();
+        }
+
+
+        public int Delete(T entity)
+        {
+            entity.IsDeleted = true;
             _dbContext.Set<T>().Update(entity);
             return _dbContext.SaveChanges();
         }
