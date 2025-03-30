@@ -1,27 +1,30 @@
 ﻿using demo.BLL.DTOs.Department;
+using demo.BLL.DTOs.Employee;
 using demo.BLL.Services.Departments;
+using demo.BLL.Services.Employees;
+
 using demo.PL.ViewModels.Departments;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.DotNet.Scaffolding.Shared.Messaging;
-using NuGet.Protocol.Plugins;
-
 namespace demo.PL.Controllers
+
 {
-    public class DepartmentController : Controller
+    public class EmployeeController:Controller
     {
         #region Services
-        private readonly IDepartmentService _departmentService;
+        private readonly IEmployeeService _employeeService;
+        //private readonly IEmployeeService employeeService;
         private readonly ILogger<DepartmentController> _logger;
 
         private readonly IWebHostEnvironment _enviroment;
 
         //[FromServices]
-        //public IDepartmentService DepartmentService { get; } = null!;
+        //public IEmployeeServiceDepartmentService { get; } = null!;
 
         //========
-        public DepartmentController(IDepartmentService departmentService, ILogger<DepartmentController> logger, IWebHostEnvironment enviroment)
+        public EmployeeController(IEmployeeService employeeService, ILogger<DepartmentController> logger, IWebHostEnvironment enviroment)
         {
-            _departmentService = departmentService;
+           
+            _employeeService = employeeService;
             _logger = logger;
             _enviroment = enviroment;
         }
@@ -31,8 +34,8 @@ namespace demo.PL.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var departments = _departmentService.GetAllDepartments();
-            return View("Index", departments);
+            var employees = _employeeService.GetAllEmployees();
+            return View("Index", employees);
         }
         #endregion
 
@@ -45,21 +48,21 @@ namespace demo.PL.Controllers
         }
         [HttpPost]
 
-        public IActionResult Create(CreatedDepartmentToRetrunDto departmentDto)
+        public IActionResult Create(CreatedEmployeeDto employeedto)
         {
             var message = string.Empty;
             if (!ModelState.IsValid)
-                return View(departmentDto);
+                return View(employeedto);
 
             try
             {
-                var result = _departmentService.CreateDepartment(departmentDto);
+                var result = _employeeService.CreateEmployee(employeedto);
 
                 if (result > 0)
                     return RedirectToAction(nameof(Index));
                 else
-                    ModelState.AddModelError(string.Empty, "Department is not created");
-                return View(departmentDto);
+                    ModelState.AddModelError(string.Empty, "employee is not created");
+                return View(employeedto);
             }
             catch (Exception ex)
             {
@@ -71,12 +74,12 @@ namespace demo.PL.Controllers
                 {
 
                     message = ex.Message;
-                    return View(departmentDto);
+                    return View(employeedto);
                 }
                 else
                 {
 
-                    message = "department is not created";
+                    message = "employee is not created";
                     return View("Error", message);
                 }
             }
@@ -92,11 +95,11 @@ namespace demo.PL.Controllers
 
                 return BadRequest();
 
-            var department = _departmentService.GetDepartmentById(id.Value);
+            var employee = _employeeService.GetEmployeeById(id.Value);
 
-            if (department is null)
+            if (employee is null)
                 return NotFound();
-            return View(department);
+            return View(employee);
         }
 
 
@@ -104,52 +107,53 @@ namespace demo.PL.Controllers
 
         #region Edit
         [HttpGet] //Get: /DEP/EDIT/ID
-        public IActionResult Edit(int? id)
+        public IActionResult Edit(int id)
         {
-            if (id is null)
-                return BadRequest();//400
-            var department = _departmentService.GetDepartmentById(id.Value);
+            var employee = _employeeService.GetEmployeeById(id);
 
-            if (department is null)
-                return NotFound();//404
-            return View(new DepartmentEditViewModel()
+            if (employee == null)
             {
-                Name = department.Name,
-                Code = department.Code,
-                Description = department.Description,
-                CreationDate = department.CreationDate,
-            });
+                return NotFound();
+            }
+
+            var employeeDto = new UpdatedEmployeeDto
+            {
+                Name = employee.Name,
+                Email = employee.Email,
+                Address = employee.Address,
+                Salary = employee.Salary,
+                Phone = employee.Phone,
+                EmployeeType = employee.EmployeeType,
+                Gendar = employee.Gendar,
+                HiringDate = employee.HiringDate,
+                IsActive = employee.IsActive
+            };
+
+            return View(employeeDto);
         }
+
 
 
         [HttpPost]
 
-        public IActionResult Edit([FromRoute] int id, DepartmentEditViewModel departmentViewModel)
+        public IActionResult Edit([FromRoute] int id, UpdatedEmployeeDto updatedEmployeeDto)
         {
             if (!ModelState.IsValid)
-                return View(departmentViewModel);
+                return View(updatedEmployeeDto);
 
             var massege = string.Empty;
 
             try
             {
-                var departmentToUpdate = new UpdatedDepartmentDto()
-                {
-                    Id = id,
-                    Code = departmentViewModel.Code,
-                    Description = departmentViewModel.Description,
-                    CreationDate = departmentViewModel.CreationDate,
-                    Name = departmentViewModel.Name,
-                };
+               
 
-
-                var result = _departmentService.UpdatedDepatment(departmentToUpdate) > 0;
+                var result = _employeeService.UpdatedEmployee(updatedEmployeeDto) > 0;
 
 
                 if (result)
                     return RedirectToAction(nameof(Index));
 
-                massege = "an error has happend while updateing the department :(";
+                massege = "an error has happend while updateing the employee";
             }
             catch (Exception ex)
             {
@@ -158,12 +162,12 @@ namespace demo.PL.Controllers
                 //2.set massege
 
 
-                massege = _enviroment.IsDevelopment() ? ex.Message : "an error has happend while updateing the department :(";
+                massege = _enviroment.IsDevelopment() ? ex.Message : "an error has happend while updateing the employee";
 
 
             }
             ModelState.AddModelError(string.Empty, massege);
-            return View(departmentViewModel);
+            return View(updatedEmployeeDto);
         }
         #endregion
 
@@ -175,11 +179,11 @@ namespace demo.PL.Controllers
         {
             if (id is null)
                 return BadRequest();
-            var department = _departmentService.GetDepartmentById(id.Value);
+            var employee = _employeeService.GetEmployeeById(id.Value);
 
-            if (department is null)
+            if (employee is null)
                 return NotFound();
-            return View(department);
+            return View(employee);
         }
 
 
@@ -191,7 +195,7 @@ namespace demo.PL.Controllers
 
             try
             {
-                var deleted = _departmentService.DeleteDepartment(id);
+                var deleted = _employeeService.DeleteEmployee(id);
 
                 if (deleted)
                     return RedirectToAction(nameof(Index));
@@ -205,15 +209,14 @@ namespace demo.PL.Controllers
                 _logger.LogError(ex, ex.Message);
                 //2.set massege
 
-
-                massege = _enviroment.IsDevelopment() ? ex.Message : "an error has happend while updateing the department :(";
+                massege = _enviroment.IsDevelopment() ? ex.Message : "an error has happend while updateing the employee :(";
 
 
             }
             //ModelState.AddModelError(string.Empty, massege);
             return RedirectToAction(nameof(Index)); //will implement toaster 
 
-        } 
+        }
         #endregion
 
     }

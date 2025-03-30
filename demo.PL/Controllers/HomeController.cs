@@ -1,5 +1,7 @@
 using System.Diagnostics;
-using demo.PL.Models;
+
+using demo.PL.ViewModels.common;
+using demo.PL.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace demo.PL.Controllers
