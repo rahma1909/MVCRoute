@@ -72,7 +72,7 @@ namespace demo.BLL.Services.Employees
                 Email=e.Email,
                 Gendar=e.Gendar,
                 EmployeeType=e.EmployeeType,
-            });
+            }).ToList();
             return employees;
         }
 

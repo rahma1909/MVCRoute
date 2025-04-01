@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace demo.DAL.Presistence.Repositories._Generic
 {
-    public class GenericRepositotry<T> where T:ModelBase
+    public class GenericRepositotry<T>:IGenericRepository<T> where T:ModelBase
     {
 
         private readonly AppDbContext _dbContext;
