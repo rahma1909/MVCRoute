@@ -44,7 +44,7 @@ namespace demo.PL.Controllers
             return View();
         }
         [HttpPost]
-
+        [ValidateAntiForgeryToken]
         public IActionResult Create(CreatedDepartmentToRetrunDto departmentDto)
         {
             var message = string.Empty;
@@ -123,7 +123,7 @@ namespace demo.PL.Controllers
 
 
         [HttpPost]
-
+        [ValidateAntiForgeryToken]
         public IActionResult Edit([FromRoute] int id, DepartmentEditViewModel departmentViewModel)
         {
             if (!ModelState.IsValid)
@@ -184,7 +184,7 @@ namespace demo.PL.Controllers
 
 
         [HttpPost]
-
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
             var massege = string.Empty;
