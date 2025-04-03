@@ -31,6 +31,7 @@ namespace demo.PL.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+            ViewData["massege"] = "hello to view";
             var departments = _departmentService.GetAllDepartments();
             return View("Index", departments);
         }
@@ -41,6 +42,8 @@ namespace demo.PL.Controllers
 
         public IActionResult Create()
         {
+
+         
             return View();
         }
         [HttpPost]
