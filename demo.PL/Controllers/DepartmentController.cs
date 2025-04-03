@@ -45,21 +45,31 @@ namespace demo.PL.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(CreatedDepartmentToRetrunDto departmentDto)
+        public IActionResult Create(DepartmentViewModel departmentVM)
         {
             var message = string.Empty;
             if (!ModelState.IsValid)
-                return View(departmentDto);
+                return View(departmentVM);
 
             try
             {
-                var result = _departmentService.CreateDepartment(departmentDto);
+
+                var createdDepartment = new CreatedDepartmentToRetrunDto()
+                {
+                   
+                    Code = departmentVM.Code,
+                    Description = departmentVM.Description,
+                    CreationDate = departmentVM.CreationDate,
+                    Name = departmentVM.Name,
+                };
+
+                var result = _departmentService.CreateDepartment(createdDepartment);
 
                 if (result > 0)
                     return RedirectToAction(nameof(Index));
                 else
                     ModelState.AddModelError(string.Empty, "Department is not created");
-                return View(departmentDto);
+                return View(departmentVM);
             }
             catch (Exception ex)
             {
@@ -71,7 +81,7 @@ namespace demo.PL.Controllers
                 {
 
                     message = ex.Message;
-                    return View(departmentDto);
+                    return View(departmentVM);
                 }
                 else
                 {
@@ -112,7 +122,7 @@ namespace demo.PL.Controllers
 
             if (department is null)
                 return NotFound();//404
-            return View(new DepartmentEditViewModel()
+            return View(new DepartmentViewModel()
             {
                 Name = department.Name,
                 Code = department.Code,
@@ -124,7 +134,7 @@ namespace demo.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, DepartmentEditViewModel departmentViewModel)
+        public IActionResult Edit([FromRoute] int id, DepartmentViewModel departmentViewModel)
         {
             if (!ModelState.IsValid)
                 return View(departmentViewModel);

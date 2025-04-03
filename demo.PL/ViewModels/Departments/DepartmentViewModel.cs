@@ -2,7 +2,7 @@
 
 namespace demo.PL.ViewModels.Departments
 {
-    public class DepartmentEditViewModel
+    public class DepartmentViewModel
     {
         [Required(ErrorMessage ="name is required !!")]
         public string Name { get; set; } = null!;
