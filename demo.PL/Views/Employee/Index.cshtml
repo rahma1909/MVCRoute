@@ -22,9 +22,11 @@
             <tr>
                 <th @Html.DisplayNameFor(e => e.Name)>name</th>
                 <th @Html.DisplayNameFor(e => e.Age)>age</th>
+                <th @Html.DisplayNameFor(e => e.Department)>Department</th>
              
              
                 <th @Html.DisplayNameFor(e => e.Salary)>salary</th>
+        
                 <th @Html.DisplayNameFor(e => e.EmployeeType)>EmployeeType</th>
                 <th @Html.DisplayNameFor(e => e.Email)>Email</th>
                 <th @Html.DisplayNameFor(e => e.IsActive)>IsActive</th>
@@ -42,13 +44,15 @@
                 <tr>
                     <td>@Html.DisplayFor(e=>  employee.Name)</td>
                     <td>@Html.DisplayFor(e=>employee.Age)</td>
+                    <td>@Html.DisplayFor(e=>employee.Department)</td>
                     <td>@Html.DisplayFor(e => employee.Salary)</td>
                     <td>@Html.DisplayFor(e => employee.EmployeeType)</td>
                     <td>@Html.DisplayFor(e => employee.Email)</td>
                     <td>@Html.DisplayFor(e => employee.IsActive)</td>
                     <td>@Html.DisplayFor(e => employee.Gendar)</td>
-                    <td>
+                
                         <partial name="_buttonsPartial" model="@employee.Id" />
+                       
                 </tr>
 
 

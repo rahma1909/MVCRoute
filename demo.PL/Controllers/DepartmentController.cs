@@ -30,9 +30,11 @@ namespace demo.PL.Controllers
         #region Index
         [HttpGet]
         public IActionResult Index()
-        {
-            ViewData["massege"] = "hello to view";
-            var departments = _departmentService.GetAllDepartments();
+        { 
+        //    ViewData["massage"] = "hello to view";
+
+        //    ViewBag.massage = "hello from bag"
+;            var departments = _departmentService.GetAllDepartments();
             return View("Index", departments);
         }
         #endregion
@@ -68,8 +70,11 @@ namespace demo.PL.Controllers
 
                 var result = _departmentService.CreateDepartment(createdDepartment);
 
-                if (result > 0)
+                if (result > 0) {
+                    TempData["Massege"] = "Department is created";
                     return RedirectToAction(nameof(Index));
+                }
+                  
                 else
                     ModelState.AddModelError(string.Empty, "Department is not created");
                 return View(departmentVM);

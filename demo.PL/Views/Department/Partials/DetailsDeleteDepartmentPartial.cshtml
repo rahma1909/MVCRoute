@@ -1,4 +1,5 @@
-﻿@model DepartemtDetailsToRetunDto
+﻿@using demo.BLL.DTOs.Department;
+@model DepartemtDetailsToRetunDto
 
 <ul class="nav nav-tabs" id="departmentTabs" role="tablist">
     <li class="nav-item" role="presentation">
@@ -65,15 +66,19 @@
 @if ((ViewData["Title"] as string)=="Details")
 {
     <div class="mt-4">
-        <a asp-action="Edit" asp-route-id="@ViewBag.Id" class="btn btn-success">Edit</a> |
+        <a asp-action="Edit" asp-route-id="@ViewData["Id"]" class="btn btn-success">Edit</a> |
         <a asp-action="Index" class="btn btn-light">Back To list</a>
     </div>
+
+
 }
 else{
-    <form class="mt-4" asp-action="Delete" asp-route-id="@ViewBag.Id" method="post">
-        <input type="submit" value="Delete" class="btn btn-danger">|
+    <form class="mt-4" asp-action="Delete" asp-route-id="@ViewData["Id"]" method="post">
+        <input type="submit" value="Delete" class="btn btn-danger">
+        |
         <a asp-action="Index" class="btn btn-light">Cancel</a>
     </form>
+
 
 
 }

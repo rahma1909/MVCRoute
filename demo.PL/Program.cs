@@ -22,7 +22,7 @@ namespace demo.PL
                 optionsLifetime:ServiceLifetime.Scoped,
                 optionsAction: (optionsBuilder) =>
                 {
-                    optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+                    optionsBuilder.UseLazyLoadingProxies().UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
                 }
                 );
 

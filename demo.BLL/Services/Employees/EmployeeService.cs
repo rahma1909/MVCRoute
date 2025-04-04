@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using demo.BLL.DTOs.Employee;
 using demo.DAL.Entities.Employeees;
 using demo.DAL.Presistence.Repositories.Employees;
+using Microsoft.EntityFrameworkCore;
 
 namespace demo.BLL.Services.Employees
 {
@@ -38,6 +39,7 @@ namespace demo.BLL.Services.Employees
                 Gendar=EmployeeDto.Gendar,
                 Salary=EmployeeDto.Salary,
                 EmployeeType=EmployeeDto.EmployeeType,
+               DepartmentId=EmployeeDto.DepartmentId ,
                 CreatedBy=1,
                 LastModifiedBy=1,
                 LastModifiedOn=DateTime.UtcNow
@@ -62,41 +64,47 @@ namespace demo.BLL.Services.Employees
 
         public IEnumerable<EmployeeDto> GetAllEmployees()
         {
-            var employees = _emprepo.GetAllQuerable().Where(e=>!e.IsDeleted).Select(e => new EmployeeDto()
+            var employees = _emprepo
+                .GetAllQuerable()
+                .Include(e=>e.Department) //eager load
+                .Where(e => !e.IsDeleted).Select(e => new EmployeeDto()
             {
-                Name=e.Name,
-                Age=e.Age,
-                Id=e.Id,
+                Name = e.Name,
+                Age = e.Age,
+                Id = e.Id,
                 Salary = e.Salary,
-                IsActive=e.IsActive,
-                Email=e.Email,
-                Gendar=e.Gendar,
-                EmployeeType=e.EmployeeType,
+                IsActive = e.IsActive,
+                Email = e.Email,
+                Gendar = e.Gendar,
+                EmployeeType = e.EmployeeType,
+                Department = e.Department.Name
             }).ToList();
             return employees;
         }
 
         public EmployeeDetailsDto? GetEmployeeById(int id)
         {
-            var Employee = _emprepo.Get(id);
+            var Employee = _emprepo.GetAll() // Ensure GetAll() returns IQueryable<Employee>
+                                   .Where(e => e.Id == id)
+                                   .Select(e => new EmployeeDetailsDto()
+                                   {
+                                       Name = e.Name,
+                                       Age = e.Age,
+                                       Address = e.Address,
+                                       Phone = e.Phone,
+                                       IsActive = e.IsActive,
+                                       Email = e.Email,
+                                       HiringDate = e.HiringDate,
+                                       Gendar = e.Gendar,
+                                       Salary = e.Salary,
+                                       EmployeeType = e.EmployeeType,
+                                       Department = e.Department != null ? e.Department.Name : "No Department"
+                                   })
+                                   .FirstOrDefault();
 
-            if (Employee is not null)
-                return new EmployeeDetailsDto()
-                {
-                    Name = Employee.Name,
-                    Age = Employee.Age,
-                    Address = Employee.Address,
-                    Phone = Employee.Phone,
-                    IsActive = Employee.IsActive,
-                    Email = Employee.Email,
-                    HiringDate = Employee.HiringDate,
-                    Gendar = Employee.Gendar,
-                    Salary = Employee.Salary,
-                    EmployeeType = Employee.EmployeeType,
-                   
-                };
-            return null;
+            return Employee;
         }
+
 
         public int UpdatedEmployee(UpdatedEmployeeDto EmployeeDto)
         {
@@ -115,6 +123,7 @@ namespace demo.BLL.Services.Employees
                 Gendar = EmployeeDto.Gendar,
                 Salary = EmployeeDto.Salary,
                 EmployeeType = EmployeeDto.EmployeeType,
+                DepartmentId = EmployeeDto.DepartmentId,
                 CreatedBy = 1,
                 LastModifiedBy = 1,
                 LastModifiedOn=DateTime.UtcNow,

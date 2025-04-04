@@ -6,9 +6,34 @@
 
 }
 
-<div class=" alert alert-primary">
-    @ViewData["massege"]
-</div>
+@* <div class=" alert alert-primary"> *@
+@*     @ViewData["massage"] *@
+@* </div> *@
+
+@* <div class=" alert alert-primary"> *@
+@*     @ViewBag.massage *@
+@* </div> *@
+
+@if (!string.IsNullOrEmpty(TempData["Massege"] as string))
+{
+    <!-- Flexbox container for aligning the toasts -->
+    <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center w-100">
+        <!-- Toast element -->
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+            <div class="toast-header">
+                <img src="~/imgs/course.webp" class="rounded me-2" alt="image">
+                <strong class="me-auto">Message</strong>
+                <small>just now</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                @TempData["Massege"]
+            </div>
+        </div>
+    </div>
+}
+
+
 
 <h1>Departments</h1>
 

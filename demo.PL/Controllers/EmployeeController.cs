@@ -42,8 +42,9 @@ namespace demo.PL.Controllers
         #region Create
         [HttpGet]
 
-        public IActionResult Create()
+        public IActionResult Create([FromServices] IDepartmentService depservice)
         {
+            ViewData["Departments"] = depservice.GetAllDepartments();
             return View();
         }
         [HttpPost]
@@ -107,14 +108,15 @@ namespace demo.PL.Controllers
 
         #region Edit
         [HttpGet] //Get: /DEP/EDIT/ID
-        public IActionResult Edit(int id)
+        public IActionResult Edit(int id, [FromServices] IDepartmentService depservice)
         {
             var employee = _employeeService.GetEmployeeById(id);
 
             if (employee == null)
-            {
+            
                 return NotFound();
-            }
+      
+            
 
             var employeeDto = new UpdatedEmployeeDto
             {
@@ -128,7 +130,7 @@ namespace demo.PL.Controllers
                 HiringDate = employee.HiringDate,
                 IsActive = employee.IsActive
             };
-
+            ViewData["Departments"] = depservice.GetAllDepartments();
             return View(employeeDto);
         }
 
