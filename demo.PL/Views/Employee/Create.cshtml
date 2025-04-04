@@ -2,10 +2,12 @@
 @using demo.DAL.Common.Enums
 @model CreatedEmployeeDto
 
-
+@{
+	var Departments = new SelectList(@ViewData["Departments"] as IEnumerable<DepartmentToReturnDto>, nameof(DepartmentToReturnDto.Id), nameof(DepartmentToReturnDto.Name));
+}
 
 <div class="row justify-content-center align-items-center">
-	<h1 class="col-8 my-4">Create New Employee</h1>
+	<h1 class="col-8 my-4">create new  Employee</h1>
 	<br />
 	<br />
 
@@ -27,6 +29,18 @@
 			<span asp-validation-for="Name" class="text-danger"></span>
 		</div>
 
+
+		<div class="form-group mb-3 col-6">
+			<label class="col-form-label" asp-for="Age">
+				@* for="code" *@
+
+				Age
+			</label>
+			<input type="" asp-for="Age" class="form-control" />
+			@* type="text" name="Code" id="Code" *@
+
+
+		</div>
 
 		<div class="form-group mb-3  col-6 ">
 			<label class="col-form-label" asp-for="Email">
@@ -85,6 +99,22 @@
 
 		</div>
 
+
+		<div class="form-group mb-3 col-6">
+			<label class="col-form-label" asp-for="DepartmentId">
+				@* for="code" *@
+
+
+			</label>
+			<select asp-for="DepartmentId" asp-items="@Departments" class="form-control">
+				<option value="@null">
+		choose....
+				</option>
+			</select>
+
+
+
+
 		<div class="form-group mb-3 col-6">
 			<label class="col-form-label" asp-for="EmployeeType">
 				@* for="code" *@
@@ -135,19 +165,19 @@
 
 		<div class="form-group mb-3 col-6">
 
-	
-				<div class="form-check">
-					<input type="checkbox" class="form-check-input" asp-for="IsActive" />
-					<label class="form-check-label" asp-for="IsActive">
-					
-					</label>
-					</div>
+
+			<div class="form-check">
+				<input type="checkbox" class="form-check-input" asp-for="IsActive" />
+				<label class="form-check-label" asp-for="IsActive">
+
+				</label>
+			</div>
 
 		</div>
 
 
 		<div class="mt-4">
-			<input type="submit" value="Create" class="btn btn-primary" /> |
+			<input asp-action="Edit" type="submit" value="save" class="btn btn-success" /> |
 			<a asp-action="Index" class="btn btn-light">Back To List</a>
 		</div>
 	</form>
@@ -155,6 +185,7 @@
 
 
 
-
-
+@section validationSection{
+	<partial name="_ValidationScriptsPartial" />
+}
 

@@ -37,7 +37,7 @@ namespace demo.BLL.DTOs.Employee
 
         [Display(Name = "Hiring Date")]
         public DateTime HiringDate { get; set; }
-
+        public int? DepartmentId { get; set; }
 
         public Gendar Gendar { get; set; }
         public EmpType EmployeeType { get; set; }

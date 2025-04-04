@@ -1,6 +1,7 @@
 ﻿@model CreatedDepartmentToRetrunDto
 @{
     ViewData["Title"] = "Create";
+    ViewBag.Action = "Create";
 }
 
 
@@ -9,75 +10,7 @@
     <br />
     <br />
 
-    <form asp-action="Create" class="col-8">
-
-        <div asp-validation-summary="ModelOnly">  </div>
-        @* //action="/Department/Create" method="post" *@
-
-        <div class="form-group mb-3">
-            <label class="col-form-label" asp-for="Code">
-                @* for="code" *@
-
-                Code
-            </label>
-            <input asp-for="Code" class="form-control" />
-            @* type="text" name="Code" id="Code" *@
-
-
-            <span asp-validation-for="Code" class="text-danger"></span>
-        </div>
-
-
-        <div class="form-group mb-3">
-            <label class="col-form-label" asp-for="Name">
-                @* for="code" *@
-
-                Name
-            </label>
-            <input asp-for="Name" class="form-control" />
-            @* type="text" name="Code" id="Code" *@
-
-
-            <span asp-validation-for="Name" class="text-danger"></span>
-        </div>
-
-
-
-        <div class="form-group mb-3">
-            <label class="col-form-label" asp-for="Description">
-                @* for="code" *@
-
-                Description
-            </label>
-            <input asp-for="Description" class="form-control" />
-            @* type="text" name="Code" id="Code" *@
-
-
-            @* <span asp-validation-for="Name" class="text-danger"></span> *@
-            @* description is optional so there is no validation *@
-        </div>
-
-
-
-
-        <div class="form-group mb-3">
-            <label class="col-form-label" asp-for="CreationDate">
-                @* for="code" *@
-
-                CreationDate
-            </label>
-            <input  type="date" asp-for="CreationDate" class="form-control" />
-            @* type="text" name="Code" id="Code" *@
-
-
-        </div>
-
-
-        <div class="mt-4">
-            <input  type="submit" value="Create" class="btn btn-primary"/> |
-            <a asp-action="Index" class="btn btn-light">Back To List</a>
-        </div>
-    </form>
+    <partial name="Partials/CreateEditDepartmentPartial" />
 </div>
 
 
@@ -85,3 +18,7 @@
 
 
 
+@section validationSection {
+
+    <partial name="_ValidationScriptsPartial" />
+}

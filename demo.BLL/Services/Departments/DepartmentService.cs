@@ -97,17 +97,26 @@ namespace demo.BLL.Services.Departments
             };
             return _departmentRepository.Update(department);
         }
-        public bool DeleteDepartment(int id)
-        {
-            var department = _departmentRepository.Get(id); //get it by id
-            if(department != null)
-            {
-                return _departmentRepository.Delete(department) > 0;
+   public bool DeleteDepartment(int id)
+{
+    Console.WriteLine($"DeleteDepartment called with ID: {id}");
 
+    if (id == 0)
+    {
+        Console.WriteLine("Invalid ID received.");
+        return false;
+    }
 
-            }
-            return false;
-        }
+    var department = _departmentRepository.Get(id);
+
+    if (department == null)
+    {
+        Console.WriteLine($"No department found with ID: {id}");
+        return false;
+    }
+
+    return _departmentRepository.Delete(department) > 0;
+}
 
       
 

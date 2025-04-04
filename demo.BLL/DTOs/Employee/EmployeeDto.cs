@@ -33,5 +33,7 @@ namespace demo.BLL.DTOs.Employee
         public Gendar Gendar { get; set; }
         [Display(Name=" employee type")]
         public EmpType EmployeeType { get; set; }
+
+        public string? Department { get; set; } 
     }
 }

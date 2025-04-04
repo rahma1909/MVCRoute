@@ -5,12 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using demo.DAL.Entities;
 using demo.DAL.Entities.Departments;
+using demo.DAL.Entities.Employeees;
 using demo.DAL.Presistence.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace demo.DAL.Presistence.Repositories._Generic
 {
-    public class GenericRepositotry<T> where T:ModelBase
+    public class GenericRepositotry<T>:IGenericRepository<T> where T:ModelBase
     {
 
         private readonly AppDbContext _dbContext;
@@ -62,9 +63,16 @@ namespace demo.DAL.Presistence.Repositories._Generic
 
         public int Delete(T entity)
         {
-            entity.IsDeleted = true;
-            _dbContext.Set<T>().Update(entity);
+        
+            
+              
+                entity.IsDeleted = true;
+                _dbContext.Set<T>().Update(entity);
+         
+
             return _dbContext.SaveChanges();
         }
+
+
     }
 }

@@ -30,8 +30,11 @@ namespace demo.PL.Controllers
         #region Index
         [HttpGet]
         public IActionResult Index()
-        {
-            var departments = _departmentService.GetAllDepartments();
+        { 
+        //    ViewData["massage"] = "hello to view";
+
+        //    ViewBag.massage = "hello from bag"
+;            var departments = _departmentService.GetAllDepartments();
             return View("Index", departments);
         }
         #endregion
@@ -41,25 +44,40 @@ namespace demo.PL.Controllers
 
         public IActionResult Create()
         {
+
+         
             return View();
         }
         [HttpPost]
-
-        public IActionResult Create(CreatedDepartmentToRetrunDto departmentDto)
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(DepartmentViewModel departmentVM)
         {
             var message = string.Empty;
             if (!ModelState.IsValid)
-                return View(departmentDto);
+                return View(departmentVM);
 
             try
             {
-                var result = _departmentService.CreateDepartment(departmentDto);
 
-                if (result > 0)
+                var createdDepartment = new CreatedDepartmentToRetrunDto()
+                {
+                   
+                    Code = departmentVM.Code,
+                    Description = departmentVM.Description,
+                    CreationDate = departmentVM.CreationDate,
+                    Name = departmentVM.Name,
+                };
+
+                var result = _departmentService.CreateDepartment(createdDepartment);
+
+                if (result > 0) {
+                    TempData["Massege"] = "Department is created";
                     return RedirectToAction(nameof(Index));
+                }
+                  
                 else
                     ModelState.AddModelError(string.Empty, "Department is not created");
-                return View(departmentDto);
+                return View(departmentVM);
             }
             catch (Exception ex)
             {
@@ -71,7 +89,7 @@ namespace demo.PL.Controllers
                 {
 
                     message = ex.Message;
-                    return View(departmentDto);
+                    return View(departmentVM);
                 }
                 else
                 {
@@ -112,7 +130,7 @@ namespace demo.PL.Controllers
 
             if (department is null)
                 return NotFound();//404
-            return View(new DepartmentEditViewModel()
+            return View(new DepartmentViewModel()
             {
                 Name = department.Name,
                 Code = department.Code,
@@ -123,8 +141,8 @@ namespace demo.PL.Controllers
 
 
         [HttpPost]
-
-        public IActionResult Edit([FromRoute] int id, DepartmentEditViewModel departmentViewModel)
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit([FromRoute] int id, DepartmentViewModel departmentViewModel)
         {
             if (!ModelState.IsValid)
                 return View(departmentViewModel);
@@ -184,7 +202,7 @@ namespace demo.PL.Controllers
 
 
         [HttpPost]
-
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
             var massege = string.Empty;

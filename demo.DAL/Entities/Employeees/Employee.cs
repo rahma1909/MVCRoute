@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using demo.DAL.Common.Enums;
+using demo.DAL.Entities.Departments;
 
 namespace demo.DAL.Entities.Employeees
 {
@@ -34,7 +35,9 @@ namespace demo.DAL.Entities.Employeees
         //[Display(Name ="Hiring Date")]
         public DateTime HiringDate { get; set; }
 
-
+        public int? DepartmentId { get; set; }
+        //navigational property one
+        public virtual Department? Department { get; set; }
         public Gendar Gendar { get; set; }
         public EmpType EmployeeType { get; set; }
     }
