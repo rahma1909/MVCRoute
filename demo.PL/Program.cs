@@ -3,6 +3,7 @@ using demo.BLL.Services.Employees;
 using demo.DAL.Presistence.Data;
 using demo.DAL.Presistence.Repositories.Departments;
 using demo.DAL.Presistence.Repositories.Employees;
+using demo.PL.Mapping;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -42,7 +43,7 @@ namespace demo.PL
 
             builder.Services.AddScoped<IEmployeeService, EmployeeService>();
             builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>(); // Ensure all dependencies are registered
-
+            builder.Services.AddAutoMapper(m=>m.AddProfile(new MappingProfile() ));
 
             var app = builder.Build();
 

@@ -12,73 +12,78 @@ namespace demo.BLL.Services.Employees
 {
     public class EmployeeService : IEmployeeService
     {
-       
-        
-            private readonly IEmployeeRepository _emprepo;
 
-            public EmployeeService(IEmployeeRepository emprepo)  
-            {
+
+        private readonly IEmployeeRepository _emprepo;
+
+        public EmployeeService(IEmployeeRepository emprepo)
+        {
             _emprepo = emprepo;
-            }
-       
+        }
+
 
         public int CreateEmployee(CreatedEmployeeDto EmployeeDto)
         {
-            
+
 
 
             var employee = new Employee()
             {
-                Name=EmployeeDto.Name,
-                Age=EmployeeDto.Age,
-                Address=EmployeeDto.Address,
-                Phone=EmployeeDto.Phone,
-                IsActive=EmployeeDto.IsActive,
-                Email=EmployeeDto.Email,
-                HiringDate=EmployeeDto.HiringDate,
-                Gendar=EmployeeDto.Gendar,
-                Salary=EmployeeDto.Salary,
-                EmployeeType=EmployeeDto.EmployeeType,
-               DepartmentId=EmployeeDto.DepartmentId ,
-                CreatedBy=1,
-                LastModifiedBy=1,
-                LastModifiedOn=DateTime.UtcNow
-                
+                Name = EmployeeDto.Name,
+                Age = EmployeeDto.Age,
+                Address = EmployeeDto.Address,
+                Phone = EmployeeDto.Phone,
+                IsActive = EmployeeDto.IsActive,
+                Email = EmployeeDto.Email,
+                HiringDate = EmployeeDto.HiringDate,
+                Gendar = EmployeeDto.Gendar,
+                Salary = EmployeeDto.Salary,
+                EmployeeType = EmployeeDto.EmployeeType,
+                DepartmentId = EmployeeDto.DepartmentId,
+                CreatedBy = 1,
+                LastModifiedBy = 1,
+                LastModifiedOn = DateTime.UtcNow
+
             };
             return _emprepo.Add(employee);
-            
-            }
+
+        }
 
         public bool DeleteEmployee(int id)
         {
             var employee = _emprepo.Get(id);
-            if(employee is not null)
+            if (employee is not null)
             {
                 return _emprepo.Delete(employee) > 0;
             }
             else
             {
-               return  false;
+                return false;
             }
         }
 
-        public IEnumerable<EmployeeDto> GetAllEmployees()
+
+
+        public IEnumerable<EmployeeDto> GetAllEmployees(string search)
         {
             var employees = _emprepo
-                .GetAllQuerable()
-                .Include(e=>e.Department) //eager load
-                .Where(e => !e.IsDeleted).Select(e => new EmployeeDto()
-            {
-                Name = e.Name,
-                Age = e.Age,
-                Id = e.Id,
-                Salary = e.Salary,
-                IsActive = e.IsActive,
-                Email = e.Email,
-                Gendar = e.Gendar,
-                EmployeeType = e.EmployeeType,
-                Department = e.Department.Name
-            }).ToList();
+                 .GetAllQuerable()
+                 .Include(e => e.Department) //eager load
+                 .Where(e => !e.IsDeleted && (string.IsNullOrEmpty(search) ||
+                  e.Name.ToLower().Contains(search.ToLower())))
+                 .Select(e => new EmployeeDto()
+                 {
+                     Name = e.Name,
+                     Age = e.Age,
+                     Id = e.Id,
+                     Salary = e.Salary,
+                     IsActive = e.IsActive,
+                     Email = e.Email,
+                     Gendar = e.Gendar,
+                     EmployeeType = e.EmployeeType,
+                     Department = e.Department.Name
+                 })
+                 .ToList();
             return employees;
         }
 
@@ -126,12 +131,15 @@ namespace demo.BLL.Services.Employees
                 DepartmentId = EmployeeDto.DepartmentId,
                 CreatedBy = 1,
                 LastModifiedBy = 1,
-                LastModifiedOn=DateTime.UtcNow,
+                LastModifiedOn = DateTime.UtcNow,
             };
 
             return _emprepo.Update(employee);
         }
 
-     
+
+
+
+
     }
 }

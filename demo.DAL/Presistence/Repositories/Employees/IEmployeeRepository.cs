@@ -11,6 +11,6 @@ namespace demo.DAL.Presistence.Repositories.Employees
 {
     public interface IEmployeeRepository:IGenericRepository<Employee>
     {
-       
+      
     }
 }

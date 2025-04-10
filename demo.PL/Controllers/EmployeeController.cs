@@ -1,4 +1,5 @@
-﻿using demo.BLL.DTOs.Department;
+﻿using AutoMapper;
+using demo.BLL.DTOs.Department;
 using demo.BLL.DTOs.Employee;
 using demo.BLL.Services.Departments;
 using demo.BLL.Services.Employees;
@@ -16,25 +17,30 @@ namespace demo.PL.Controllers
         private readonly ILogger<DepartmentController> _logger;
 
         private readonly IWebHostEnvironment _enviroment;
+        private readonly IMapper _mapper;
 
         //[FromServices]
         //public IEmployeeServiceDepartmentService { get; } = null!;
 
         //========
-        public EmployeeController(IEmployeeService employeeService, ILogger<DepartmentController> logger, IWebHostEnvironment enviroment)
+        public EmployeeController(IEmployeeService employeeService,
+            ILogger<DepartmentController> logger,
+            IWebHostEnvironment enviroment,
+            IMapper mapper)
         {
            
             _employeeService = employeeService;
             _logger = logger;
             _enviroment = enviroment;
+            _mapper = mapper;
         }
         #endregion
 
         #region Index
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index( string search )
         {
-            var employees = _employeeService.GetAllEmployees();
+            var employees = _employeeService.GetAllEmployees(search);
             return View("Index", employees);
         }
         #endregion

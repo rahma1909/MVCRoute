@@ -13,10 +13,13 @@ namespace demo.DAL.Presistence.Repositories.Employees
 {
     public class EmployeeRepository : GenericRepositotry<Employee>, IEmployeeRepository
     {
+        private readonly AppDbContext _dbContext;
+
         public EmployeeRepository(AppDbContext dbContext):base(dbContext)
         {
-            
+            _dbContext = dbContext;
         }
 
+      
     }
 }
