@@ -6,21 +6,22 @@ using System.Threading.Tasks;
 using demo.BLL.DTOs.Department;
 using demo.DAL.Entities.Departments;
 using demo.DAL.Presistence.Repositories.Departments;
+using demo.DAL.Presistence.UnitOfWork;
 
 namespace demo.BLL.Services.Departments
 {
     public class DepartmentService : IDepartmentService
 
     {
-        private readonly IDepartmentRepository _departmentRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public DepartmentService(IDepartmentRepository departmentRepository)
+        public DepartmentService(IUnitOfWork unitOfWork)
         {
-            _departmentRepository = departmentRepository;
+            _unitOfWork = unitOfWork;
         }
         public IEnumerable<DepartmentToReturnDto> GetAllDepartments()
         {
-            var departments = _departmentRepository.GetAllQuerable().Where(d => !d.IsDeleted).Select(department=> new DepartmentToReturnDto
+            var departments = _unitOfWork.DepartmentRepository.GetAllQuerable().Where(d => !d.IsDeleted).Select(department => new DepartmentToReturnDto
             {
                 Id = department.Id,
                 Name = department.Name,
@@ -28,8 +29,8 @@ namespace demo.BLL.Services.Departments
                 CreationDate = department.CreationDate,
 
             });
-            return departments; 
-          
+            return departments;
+
 
             //foreach (var department in departments)  //manual mapping
             //{
@@ -45,7 +46,7 @@ namespace demo.BLL.Services.Departments
         }
         public DepartemtDetailsToRetunDto? GetDepartmentById(int id)
         {
-            var department = _departmentRepository.Get(id);
+            var department = _unitOfWork.DepartmentRepository.Get(id);
             if (department is not null) // != null / is {}
             {
                 return new DepartemtDetailsToRetunDto
@@ -75,11 +76,12 @@ namespace demo.BLL.Services.Departments
                 CreationDate = departmentDto.CreationDate,
                 Description = departmentDto.Description,
                 CreatedBy = 1,
-                CreatedOn=DateTime.Now,
-                LastModifiedBy=1,
-                LastModifiedOn= DateTime.Now,
+                CreatedOn = DateTime.Now,
+                LastModifiedBy = 1,
+                LastModifiedOn = DateTime.Now,
             };
-            return _departmentRepository.Add(department);
+            _unitOfWork.DepartmentRepository.Add(department);
+            return _unitOfWork.Complete();
         }
 
         public int UpdatedDepatment(UpdatedDepartmentDto departmentDto)
@@ -87,40 +89,33 @@ namespace demo.BLL.Services.Departments
             //CreatedDepartmentToRetrunDto=>department
             var department = new Department()
             {
-                Id=departmentDto.Id,
+                Id = departmentDto.Id,
                 Name = departmentDto.Name,
                 Code = departmentDto.Code,
                 CreationDate = departmentDto.CreationDate,
-              
+
                 LastModifiedBy = 1,
                 LastModifiedOn = DateTime.Now,
             };
-            return _departmentRepository.Update(department);
+            _unitOfWork.DepartmentRepository.Update(department);
+            return _unitOfWork.Complete();
         }
-   public bool DeleteDepartment(int id)
-{
-    Console.WriteLine($"DeleteDepartment called with ID: {id}");
+        public bool DeleteDepartment(int id)
+        {
+            var deprepo = _unitOfWork.DepartmentRepository;
+            var dep = deprepo.Get(id);
 
-    if (id == 0)
-    {
-        Console.WriteLine("Invalid ID received.");
-        return false;
-    }
 
-    var department = _departmentRepository.Get(id);
+            if (dep is { })
+            deprepo.Delete(dep);
+            return _unitOfWork.Complete() > 0;
 
-    if (department == null)
-    {
-        Console.WriteLine($"No department found with ID: {id}");
-        return false;
-    }
 
-    return _departmentRepository.Delete(department) > 0;
-}
+      }
 
-      
 
-      
-       
+
+
+
     }
 }

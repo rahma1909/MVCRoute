@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,10 +20,10 @@ namespace demo.DAL.Presistence.Repositories._Generic
         {
             _dbContext = dbContext;
         }
-        public int Add(T entity)
+        public void Add(T entity)
         {
             _dbContext.Set<T>().Add(entity);
-            return _dbContext.SaveChanges();
+           
         }
 
 
@@ -54,14 +54,14 @@ namespace demo.DAL.Presistence.Repositories._Generic
             return _dbContext.Set<T>();
         }
 
-        public int Update(T entity)
+        public void Update(T entity)
         {
             _dbContext.Set<T>().Update(entity);
-            return _dbContext.SaveChanges();
+
         }
 
 
-        public int Delete(T entity)
+        public void Delete(T entity)
         {
         
             
@@ -70,7 +70,7 @@ namespace demo.DAL.Presistence.Repositories._Generic
                 _dbContext.Set<T>().Update(entity);
          
 
-            return _dbContext.SaveChanges();
+     
         }
 
 

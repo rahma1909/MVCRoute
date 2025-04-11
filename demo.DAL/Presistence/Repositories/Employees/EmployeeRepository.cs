@@ -15,7 +15,7 @@ namespace demo.DAL.Presistence.Repositories.Employees
     {
         private readonly AppDbContext _dbContext;
 
-        public EmployeeRepository(AppDbContext dbContext):base(dbContext)
+        public EmployeeRepository(AppDbContext dbContext):base(dbContext) //dbcontext obj willcome from the uow
         {
             _dbContext = dbContext;
         }

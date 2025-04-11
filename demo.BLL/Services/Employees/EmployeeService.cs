@@ -6,19 +6,18 @@ using System.Threading.Tasks;
 using demo.BLL.DTOs.Employee;
 using demo.DAL.Entities.Employeees;
 using demo.DAL.Presistence.Repositories.Employees;
+using demo.DAL.Presistence.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 
 namespace demo.BLL.Services.Employees
 {
     public class EmployeeService : IEmployeeService
     {
+        private readonly IUnitOfWork _unitOfWork;
 
-
-        private readonly IEmployeeRepository _emprepo;
-
-        public EmployeeService(IEmployeeRepository emprepo)
+        public EmployeeService(IUnitOfWork unitOfWork)
         {
-            _emprepo = emprepo;
+           _unitOfWork = unitOfWork;
         }
 
 
@@ -45,16 +44,19 @@ namespace demo.BLL.Services.Employees
                 LastModifiedOn = DateTime.UtcNow
 
             };
-            return _emprepo.Add(employee);
+            _unitOfWork.EmployeeRepository.Add(employee);
+          return  _unitOfWork.Complete();
 
         }
 
         public bool DeleteEmployee(int id)
         {
-            var employee = _emprepo.Get(id);
+            var employee = _unitOfWork.EmployeeRepository.Get(id);
             if (employee is not null)
             {
-                return _emprepo.Delete(employee) > 0;
+                var emprepo = _unitOfWork.EmployeeRepository;
+                emprepo.Delete(employee);
+                return _unitOfWork.Complete()>0;
             }
             else
             {
@@ -66,7 +68,7 @@ namespace demo.BLL.Services.Employees
 
         public IEnumerable<EmployeeDto> GetAllEmployees(string search)
         {
-            var employees = _emprepo
+            var employees = _unitOfWork.EmployeeRepository
                  .GetAllQuerable()
                  .Include(e => e.Department) //eager load
                  .Where(e => !e.IsDeleted && (string.IsNullOrEmpty(search) ||
@@ -89,7 +91,7 @@ namespace demo.BLL.Services.Employees
 
         public EmployeeDetailsDto? GetEmployeeById(int id)
         {
-            var Employee = _emprepo.GetAll() // Ensure GetAll() returns IQueryable<Employee>
+            var Employee = _unitOfWork.EmployeeRepository.GetAll() // Ensure GetAll() returns IQueryable<Employee>
                                    .Where(e => e.Id == id)
                                    .Select(e => new EmployeeDetailsDto()
                                    {
@@ -134,7 +136,8 @@ namespace demo.BLL.Services.Employees
                 LastModifiedOn = DateTime.UtcNow,
             };
 
-            return _emprepo.Update(employee);
+            _unitOfWork.EmployeeRepository.Update(employee);
+            return _unitOfWork.Complete();
         }
 
 

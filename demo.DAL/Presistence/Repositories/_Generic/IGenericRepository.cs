@@ -13,8 +13,8 @@ namespace demo.DAL.Presistence.Repositories._Generic
         T? Get(int Id);
         IEnumerable<T> GetAll(bool withAsNoTracking = true);
         IQueryable<T> GetAllQuerable();
-        int Add(T entity);
-        int Update(T entity);
-        int Delete(T entity);
+        void Add(T entity);
+        void Update(T entity);
+        void Delete(T entity);
     }
 }
